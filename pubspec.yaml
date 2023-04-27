@@ -1,0 +1,69 @@
+name: cv_charing
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment:
+  sdk: ">=2.19.2 <3.0.0"
+
+dependencies:
+  cached_network_image: any
+  carousel_slider: ^4.0.0
+  cupertino_icons: ^1.0.2
+  firebase_core: ^1.24.0
+  firebase_messaging: ^11.2.6
+  flutter:
+    sdk: flutter
+  flutter_iconly: ^1.0.2
+  awesome_notifications:
+  flutter_staggered_grid_view: ^0.4.0
+  get:
+  get_storage:
+  http: any
+  lottie: ^1.2.1
+  pull_to_refresh: ^2.0.0
+  restart_app: ^1.1.0
+  share: any
+  url_launcher:
+  vibration: ^1.7.5
+  intl:
+  solid_bottom_sheet: ^0.1.10
+  mobile_scanner: ^3.2.0
+  photo_view: ^0.13.0
+  firebase_storage:
+  firebase_auth:
+  cloud_firestore:
+  permission_handler: ^8.3.0
+  image_picker: ^0.8.6
+  geolocator: ^9.0.2
+  google_maps_flutter:
+  custom_map_markers: ^0.0.2+1
+  location_geocoder: ^1.0.5
+  google_maps_widget: ^1.0.5+1
+  firebase_core_platform_interface:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+    - assets/fonts/
+    - assets/icons/
+    - assets/lottie/
+    - assets/image/
+
+  fonts:
+    - family: GilroyBold
+      fonts:
+        - asset: assets/fonts/Gilroy-Bold.ttf
+    - family: GilroySemiBold
+      fonts:
+        - asset: assets/fonts/Gilroy-SemiBold.ttf
+    - family: GilroyMedium
+      fonts:
+        - asset: assets/fonts/Gilroy-Medium.ttf
+    - family: GilroyRegular
+      fonts:
+        - asset: assets/fonts/Gilroy-Regular.ttf
+  uses-material-design: true
+  generate: true
