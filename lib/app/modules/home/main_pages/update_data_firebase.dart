@@ -177,22 +177,25 @@ class _UpdateDataFirebaseState extends State<UpdateDataFirebase> {
                       zoomGesturesEnabled: true,
                     ),
                   ),
-                  AgreeButton(onTap: () async {
-                    await FirebaseFirestore.instance.collection('stations').doc(widget.docID).update({
-                      'block_fee': addController3.text,
-                      'count': addController4.text,
-                      'fee': addController5.text,
-                      'lat': lat.toString(),
-                      'long': long.toString(),
-                      'location': addController1.text,
-                      'name': addController2.text,
-                      'occupy_fee': addController6.text,
-                      'public': publicValue,
-                    }).then((value) {
-                      Get.back();
-                      showSnackBar('Üýtgedildi', 'Maglumatlat üýtgedildi', kPrimaryColor);
-                    });
-                  }),
+                  AgreeButton(
+                      name: 'agree',
+                      style: false,
+                      onTap: () async {
+                        await FirebaseFirestore.instance.collection('stations').doc(widget.docID).update({
+                          'block_fee': addController3.text,
+                          'count': addController4.text,
+                          'fee': addController5.text,
+                          'lat': lat.toString(),
+                          'long': long.toString(),
+                          'location': addController1.text,
+                          'name': addController2.text,
+                          'occupy_fee': addController6.text,
+                          'public': publicValue,
+                        }).then((value) {
+                          Get.back();
+                          showSnackBar('Üýtgedildi', 'Maglumatlat üýtgedildi', kPrimaryColor);
+                        });
+                      }),
                 ],
               );
             }));

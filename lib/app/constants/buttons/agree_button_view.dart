@@ -8,13 +8,17 @@ import '../constants.dart';
 
 class AgreeButton extends StatelessWidget {
   final Function() onTap;
+  final String name;
+  final bool style;
 
   AgreeButton({
     required this.onTap,
     Key? key,
+    required this.name,
+    required this.style,
   }) : super(key: key);
 
-  var homeController = HomeController();
+  final HomeController homeController = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: onTap, child: animatedContaner());
@@ -25,7 +29,7 @@ class AgreeButton extends StatelessWidget {
       return AnimatedContainer(
         decoration: BoxDecoration(
           borderRadius: borderRadius20,
-          color: kPrimaryColor,
+          color: style ? Colors.white : kPrimaryColor,
         ),
         margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: homeController.agreeButton.value ? 0 : 10),
@@ -42,11 +46,11 @@ class AgreeButton extends StatelessWidget {
                 ),
               )
             : Text(
-                'agree'.tr,
+                name.tr,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
+                style: TextStyle(color: style ? Colors.black : Colors.white, fontFamily: gilroySemiBold, fontSize: 22),
               ),
       );
     });

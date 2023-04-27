@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cv_charing/app/constants/buttons/agree_button_view.dart';
 import 'package:cv_charing/app/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../../constants/text_fields/custom_text_field.dart';
 import '../../../constants/widgets.dart';
+import '../../home/controllers/home_controller.dart';
 import '../../home/views/home_view.dart';
 
 class SignInView extends StatelessWidget {
@@ -17,6 +19,9 @@ class SignInView extends StatelessWidget {
   FocusNode focusNodeSurname = FocusNode();
   FocusNode focusNodeGmail = FocusNode();
   FocusNode focusNodePassword = FocusNode();
+  final login = GlobalKey<FormState>();
+  final HomeController homeController = Get.put(HomeController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,69 +55,90 @@ class SignInView extends StatelessWidget {
                 ],
               ),
             ),
-            Column(
-              children: [
-                CustomTextField(
-                  labelName: 'text7',
-                  controller: nameTextEditingController,
-                  focusNode: focusNodeName,
-                  requestfocusNode: focusNodeSurname,
-                  isNumber: false,
-                  unFocus: false,
-                  cursorColor: Colors.white,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: CustomTextField(
-                      labelName: 'text8',
-                      controller: surnameTextEditingController,
-                      focusNode: focusNodeSurname,
-                      requestfocusNode: focusNodeGmail,
-                      isNumber: false,
-                      unFocus: false,
-                      cursorColor: Colors.white),
-                ),
-                CustomTextField(
-                    labelName: 'text3',
-                    controller: GmailTextEditingController,
-                    focusNode: focusNodeGmail,
-                    requestfocusNode: focusNodePassword,
+            Form(
+              key: login,
+              child: Column(
+                children: [
+                  CustomTextField(
+                    labelName: 'text7',
+                    controller: nameTextEditingController,
+                    focusNode: focusNodeName,
+                    requestfocusNode: focusNodeSurname,
                     isNumber: false,
                     unFocus: false,
-                    cursorColor: Colors.white),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  child: CustomTextField(
-                      labelName: 'text4',
-                      controller: PasswordTextEditingController,
-                      focusNode: focusNodePassword,
-                      requestfocusNode: focusNodeName,
+                    cursorColor: Colors.white,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: CustomTextField(
+                        labelName: 'text8',
+                        controller: surnameTextEditingController,
+                        focusNode: focusNodeSurname,
+                        requestfocusNode: focusNodeGmail,
+                        isNumber: false,
+                        unFocus: false,
+                        cursorColor: Colors.white),
+                  ),
+                  CustomTextField(
+                      labelName: 'text3',
+                      controller: GmailTextEditingController,
+                      focusNode: focusNodeGmail,
+                      requestfocusNode: focusNodePassword,
                       isNumber: false,
                       unFocus: false,
                       cursorColor: Colors.white),
-                ),
-                button('text6', () async {
-                  try {
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: GmailTextEditingController.text, password: PasswordTextEditingController.text);
-                    await FirebaseFirestore.instance.collection('users').add({
-                      'name': surnameTextEditingController.text + nameTextEditingController.text,
-                    });
-                    await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection('favorites').get();
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: CustomTextField(
+                        labelName: 'text4',
+                        controller: PasswordTextEditingController,
+                        focusNode: focusNodePassword,
+                        requestfocusNode: focusNodeName,
+                        isNumber: false,
+                        unFocus: false,
+                        cursorColor: Colors.white),
+                  ),
+                  AgreeButton(
+                      onTap: () async {
+                        if (login.currentState!.validate()) {
+                          try {
+                            homeController.agreeButton.value = !homeController.agreeButton.value;
 
-                    await FirebaseAuth.instance.currentUser!.updateDisplayName(surnameTextEditingController.text + nameTextEditingController.text).then((value) {
-                      Get.to(() => HomeView('${FirebaseAuth.instance.currentUser!.displayName ?? 'CV Charging Vehicles'}'));
-                    });
-                  } on FirebaseAuthException catch (e) {
-                    if (e.code.toString() == 'user-not-found') {
-                      showSnackBar('error2', 'error1', Colors.red);
-                    } else if (e.code.toString() == 'wrong-password') {
-                      showSnackBar('error2', 'error3', Colors.red);
-                    } else {
-                      showSnackBar('Error', e.message.toString(), Colors.red);
-                    }
-                  }
-                }, true),
-              ],
+                            if (homeController.agreeButton.value == true) {
+                              await FirebaseAuth.instance.createUserWithEmailAndPassword(email: GmailTextEditingController.text, password: PasswordTextEditingController.text);
+                              await FirebaseFirestore.instance.collection('users').add({
+                                'name': surnameTextEditingController.text + nameTextEditingController.text,
+                              });
+                              await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).collection('favorites').get();
+
+                              await FirebaseAuth.instance.currentUser!.updateDisplayName(surnameTextEditingController.text + nameTextEditingController.text).then((value) {
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) {
+                                  return HomeView('${FirebaseAuth.instance.currentUser!.displayName ?? 'CV Charging Vehicles'}');
+                                }), (Route<dynamic> route) => false);
+                              });
+                            } else {
+                              showSnackBar('error2', 'Garaşyň', Colors.red);
+                            }
+                            homeController.agreeButton.value = !homeController.agreeButton.value;
+                          } on FirebaseAuthException catch (e) {
+                            homeController.agreeButton.value = !homeController.agreeButton.value;
+
+                            if (e.code.toString() == 'user-not-found') {
+                              showSnackBar('error2', 'error1', Colors.red);
+                            } else if (e.code.toString() == 'wrong-password') {
+                              showSnackBar('error2', 'error3', Colors.red);
+                            } else {
+                              showSnackBar('error2', e.message.toString(), Colors.red);
+                            }
+                          }
+                        } else {
+                          showSnackBar('noConnection3', 'errorEmpty', Colors.red);
+                        }
+                      },
+                      name: 'text6',
+                      style: false),
+                ],
+              ),
             ),
           ],
         ),
